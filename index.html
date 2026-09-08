@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex EV | O Futuro Elétrico Interativo</title>
+    
+    <!-- Fonts e Icones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==================== CSS RESET & VARS ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #151c2e;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --text-light: #f1f5f9;
+            --text-dim: #94a3b8;
+            --font-title: 'Orbitron', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+            transition: 0.3s;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .logo span { color: var(--primary); }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        .btn-nav {
+            border: 1px solid var(--primary);
+            padding: 8px 22px;
+            border-radius: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* ==================== HERO ==================== */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(rgba(11, 15, 25, 0.7), var(--bg-dark)), 
+                        url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.3rem;
+            max-width: 650px;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: #000;
+            padding: 14px 38px;
+            font-weight: 700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+        }
+
+        /* ==================== SEÇÃO DE MODELOS & FILTROS ==================== */
+        .models-section {
+            padding: 80px 8%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+        }
+
+        /* Filtros JS */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Grid de Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .card.hide {
+            display: none;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        .card-content { padding: 25px; }
+
+        .card-title {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        /* Especificações Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .spec-item { display: flex; flex-direction: column; }
+        .spec-item i { color: var(--primary); margin-bottom: 4px; }
+        .spec-label { font-size: 0.85rem; color: var(--text-dim); }
+        .spec-value { font-weight: 700; font-size: 1.1rem; }
+
+        /* Color Picker JS */
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-picker span { font-size: 0.9rem; color: var(--text-dim); }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .dot:hover, .dot.active { border-color: #fff; transform: scale(1.2); }
+        .dot-cyan { background: #00f2fe; }
+        .dot-red { background: #ff0055; }
+        .dot-silver { background: #e2e8f0; }
+
+        .card-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .btn-card {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-card:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* ==================== SIMULADOR DE AUTONOMIA (JS) ==================== */
+        .simulator-section {
+            background: #0f1523;
+            padding: 80px 8%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .simulator-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .control-group input[type=range] {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .result-display {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 1px solid var(--primary);
+        }
+
+        .result-display h3 {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+
+        .result-display .km-output {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        /* ==================== MODAL (JS) ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s opacity ease;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--primary);
+            position: relative;
+            transform: translateY(-20px);
+            transition: 0.3s transform ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.8rem;
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .close-modal:hover { color: var(--primary); }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-form input {
+            padding: 12px;
+            background: #0b0f19;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .modal-form input:focus { border-color: var(--primary); }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                position: absolute;
+                top: 100%; left: 0; width: 100%;
+                background: var(--bg-dark);
+                flex-direction: column;
+                padding: 20px;
+                display: none;
+                border-bottom: 1px solid var(--primary);
+            }
+            nav.active { display: flex; }
+            nav ul { flex-direction: column; align-items: center; }
+            .menu-toggle { display: block; }
+            .hero h1 { font-size: 2.2rem; }
+            .btn-nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">APEX <span>EV</span></div>
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="#home">Início</a></li>
+                <li><a href="#modelos">Modelos</a></li>
+                <li><a href="#simulador">Simulador</a></li>
+            </ul>
+        </nav>
+        <a href="#modelos" class="btn-nav">Reservar</a>
+        <div class="menu-toggle" id="mobile-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Sinta a <span>Aceleração</span> do Amanhã</h1>
+        <p>A fusão perfeita entre alta performance, design futurista e sustentabilidade avançada.</p>
+        <a href="#modelos" class="btn-primary">Ver Modelos</a>
+    </section>
+
+    <!-- Modelos Section -->
+    <section class="models-section" id="modelos">
+        <div class="section-header">
+            <h2>Modelos Exclusivos</h2>
+            <p>Selecione uma categoria para filtrar</p>
+        </div>
+
+        <!-- Filtros JS -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="esportivo">Esportivo</button>
+            <button class="filter-btn" data-filter="suv">SUV</button>
+            <button class="filter-btn" data-filter="hatch">Hatch</button>
+        </div>
+
+        <!-- Grid de Cards -->
+        <div class="cards-container">
+
+            <!-- Card 1: Esportivo -->
+            <div class="card" data-category="esportivo">
+                <span class="card-tag">Esportivo</span>
+                <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80" alt="Apex Hyperion" class="car-img">
+                <div class="card-content">
+                    <h3 class="card-title">Apex Hyperion</h3>
+                    
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fa-solid fa-gauge-high"></i><span class="spec-label">0-100 km/h</span><span class="spec-value">2.1s</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-battery-full"></i><span class="spec-label">Autonomia</span><span class="spec-value">620 km</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-bolt"></i><span class="spec-label">Potência</span><span class="spec-value">1.020 cv</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-car-side"></i><span class="spec-label">Tração</span><span class="spec-value">AWD</span></div>
+                    </div>
+
+                    <!-- Seletor de Cores JS -->
+                    <div class="color-picker">
+                        <span>Personalizar Cor:</span>
+                        <div class="dot dot-cyan active" data-color="#00f2fe"></div>
+                        <div class="dot dot-red" data-color="#ff0055"></div>
+                        <div class="dot dot-silver" data-color="#e2e8f0"></div>
+                    </div>
+
+                    <span class="card-price">R$ 890.000</span>
+                    <button class="btn-card open-modal-btn" data-car="Apex Hyperion">Agendar Test Drive</button>
+                </div>
+            </div>
+
+            <!-- Card 2: SUV -->
+            <div class="card" data-category="suv">
+                <span class="card-tag">SUV</span>
+                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80" alt="Apex Terra" class="car-img">
+                <div class="card-content">
+                    <h3 class="card-title">Apex Terra</h3>
+                    
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fa-solid fa-gauge-high"></i><span class="spec-label">0-100 km/h</span><span class="spec-value">3.8s</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-battery-full"></i><span class="spec-label">Autonomia</span><span class="spec-value">580 km</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-bolt"></i><span class="spec-label">Potência</span><span class="spec-value">540 cv</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-users"></i><span class="spec-label">Espaço</span><span class="spec-value">7 Lugares</span></div>
+                    </div>
+
+                    <div class="color-picker">
+                        <span>Personalizar Cor:</span>
+                        <div class="dot dot-cyan active" data-color="#00f2fe"></div>
+                        <div class="dot dot-red" data-color="#ff0055"></div>
+                        <div class="dot dot-silver" data-color="#e2e8f0"></div>
+                    </div>
+
+                    <span class="card-price">R$ 520.000</span>
+                    <button class="btn-card open-modal-btn" data-car="Apex Terra">Agendar Test Drive</button>
+                </div>
+            </div>
+
+            <!-- Card 3: Hatch -->
+            <div class="card" data-category="hatch">
+                <span class="card-tag">Hatch</span>
+                <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" alt="Apex Pulse" class="car-img">
+                <div class="card-content">
+                    <h3 class="card-title">Apex Pulse</h3>
+                    
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fa-solid fa-gauge-high"></i><span class="spec-label">0-100 km/h</span><span class="spec-value">4.9s</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-battery-full"></i><span class="spec-label">Autonomia</span><span class="spec-value">450 km</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-bolt"></i><span class="spec-label">Potência</span><span class="spec-value">300 cv</span></div>
+                        <div class="spec-item"><i class="fa-solid fa-charging-station"></i><span class="spec-label">Recarga</span><span class="spec-value">20 min</span></div>
+                    </div>
+
+                    <div class="color-picker">
+                        <span>Personalizar Cor:</span>
+                        <div class="dot dot-cyan active" data-color="#00f2fe"></div>
+                        <div class="dot dot-red" data-color="#ff0055"></div>
+                        <div class="dot dot-silver" data-color="#e2e8f0"></div>
+                    </div>
+
+                    <span class="card-price">R$ 280.000</span>
+                    <button class="btn-card open-modal-btn" data-car="Apex Pulse">Agendar Test Drive</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Simulador de Autonomia JS -->
+    <section class="simulator-section" id="simulador">
+        <div class="section-header">
+            <h2>Simulador de Autonomia</h2>
+            <p>Calcule o alcance estimado da bateria baseado em suas condições de uso</p>
+        </div>
+
+        <div class="simulator-box">
+            <div class="control-group">
+                <label>Velocidade Média: <span id="speed-val">90 km/h</span></label>
+                <input type="range" id="speed-range" min="40" max="150" value="90">
+            </div>
+
+            <div class="control-group">
+                <label>Temperatura Externa: <span id="temp-val">25°C</span></label>
+                <input type="range" id="temp-range" min="-5" max="45" value="25">
+            </div>
+
+            <div class="result-display">
+                <h3>Autonomia Estimada do Veículo</h3>
+                <div class="km-output" id="range-result">520 km</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Form (JS Pop-up) -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 style="font-family: var(--font-title);" id="modal-car-title">Agendar Test Drive</h2>
+            <p style="color: var(--text-dim); margin-top: 5px;">Preencha seus dados e nossa equipe entrará em contato em breve.</p>
+            
+            <form class="modal-form" id="booking-form">
+                <input type="text" placeholder="Seu Nome Completo" required>
+                <input type="email" placeholder="Seu E-mail" required>
+                <input type="tel" placeholder="Seu Telefone / WhatsApp" required>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Confirmar Solicitacao</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="logo">APEX <span>EV</span></div>
+        <p style="margin-top: 10px;">&copy; 2026 Apex EV Inc. Tecnologia e Inovação em Veículos Elétricos.</p>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // 1. Menu Mobile Toggle
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // 2. Filtro de Categorias de Carros
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const carCards = document.querySelectorAll('.card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Atualiza classe ativa no botão
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                carCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.classList.remove('hide');
+                    } else {
+                        card.classList.add('hide');
+                    }
+                });
+            });
+        });
+
+        // 3. Seletor de Cores do Card (Personalizador Interativo)
+        const colorDots = document.querySelectorAll('.dot');
+
+        colorDots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const parentPicker = e.target.closest('.color-picker');
+                parentPicker.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const chosenColor = e.target.getAttribute('data-color');
+                const card = e.target.closest('.card');
+                
+                // Altera a cor de destaque da borda e título do card dinamicamente
+                card.style.borderColor = chosenColor;
+                card.querySelector('.card-title').style.color = chosenColor;
+            });
+        });
+
+        // 4. Simulador de Autonomia (Cálculo Dinâmico)
+        const speedRange = document.getElementById('speed-range');
+        const tempRange = document.getElementById('temp-range');
+        const speedVal = document.getElementById('speed-val');
+        const tempVal = document.getElementById('temp-val');
+        const rangeResult = document.getElementById('range-result');
+
+        function updateAutonomy() {
+            const speed = parseInt(speedRange.value);
+            const temp = parseInt(tempRange.value);
+
+            speedVal.innerText = `${speed} km/h`;
+            tempVal.innerText = `${temp}°C`;
+
+            // Algoritmo simples simulador
+            let baseAutonomy = 550;
+
+            // Perda de autonomia por alta velocidade
+            if (speed > 80) {
+                baseAutonomy -= (speed - 80) * 2.2;
+            } else if (speed < 60) {
+                baseAutonomy += 30; // Mais eficiente em baixas velocidades
+            }
+
+            // Perda de autonomia por temperaturas extremas (ar-condicionado / aquecimento)
+            if (temp < 10) {
+                baseAutonomy -= (10 - temp) * 3;
+            } else if (temp > 30) {
+                baseAutonomy -= (temp - 30) * 2;
+            }
+
+            rangeResult.innerText = `${Math.round(baseAutonomy)} km`;
+        }
+
+        speedRange.addEventListener('input', updateAutonomy);
+        tempRange.addEventListener('input', updateAutonomy);
+
+        // 5. Modal Interativo de Agendamento
+        const modalOverlay = document.getElementById('modal-overlay');
+        const closeModal = document.getElementById('close-modal');
+        const openModalBtns = document.querySelectorAll('.open-modal-btn');
+        const modalCarTitle = document.getElementById('modal-car-title');
+        const bookingForm = document.getElementById('booking-form');
+
+        openModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const carName = btn.getAttribute('data-car');
+                modalCarTitle.innerText = `Agendar Test Drive: ${carName}`;
+                modalOverlay.classList.add('active');
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Solicitação enviada com sucesso! Um consultor Apex EV entrará em contato.');
+            modalOverlay.classList.remove('active');
+            bookingForm.reset();
+        });
+    </script>
+</body>
+</html>
